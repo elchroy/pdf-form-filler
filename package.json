@@ -1,0 +1,25 @@
+{
+  "name": "pdf-form-filler",
+  "version": "1.0.0",
+  "description": "A PDF Form Filler for a Canadian Immigration",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elchroy/pdf-form-filler.git"
+  },
+  "keywords": [
+    "pdf",
+    "form",
+    "filler",
+    "immigration"
+  ],
+  "author": "elchroy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/elchroy/pdf-form-filler/issues"
+  },
+  "homepage": "https://github.com/elchroy/pdf-form-filler#readme"
+}
