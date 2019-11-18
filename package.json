@@ -28,6 +28,7 @@
   "dependencies": {
     "boxen": "^4.1.0",
     "chalk": "^3.0.0",
+    "cli-select": "^1.1.1",
     "faker": "^4.1.0",
     "pdf-fill-form": "^4.1.0",
     "yargs": "^15.0.1"
