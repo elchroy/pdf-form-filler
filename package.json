@@ -2,7 +2,10 @@
   "name": "pdf-form-filler",
   "version": "1.0.0",
   "description": "A PDF Form Filler for a Canadian Immigration",
-  "main": "index.js",
+  "main": "./bin/index.js",
+  "bin": {
+    "cnd-immigration-pdf-filler": "./bin/index.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -21,5 +24,15 @@
   "bugs": {
     "url": "https://github.com/elchroy/pdf-form-filler/issues"
   },
-  "homepage": "https://github.com/elchroy/pdf-form-filler#readme"
+  "homepage": "https://github.com/elchroy/pdf-form-filler#readme",
+  "dependencies": {
+    "boxen": "^4.1.0",
+    "chalk": "^3.0.0",
+    "faker": "^4.1.0",
+    "pdf-fill-form": "^4.1.0",
+    "yargs": "^15.0.1"
+  },
+  "devDependencies": {
+    "prettier": "^1.19.1"
+  }
 }
