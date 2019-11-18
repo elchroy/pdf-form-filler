@@ -11,6 +11,11 @@ const findUserByEmail = async email => {
   return JSON.parse(user);
 };
 
+const validateEmail = email => {
+  const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(String(email).toLowerCase());
+};
+
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout
@@ -23,24 +28,28 @@ rl.question("Please enter email address: ", email => {
   }
   // TODO: validate email
 
-  // search for user
-  console.log(`Searching for user with email - ${email}`);
-  const user = findUserByEmail(email);
-
-  if (!user) {
-    console.log(`User with email - ${email} not found!`);
+  if (!validateEmail(email)) {
+    console.log(`Invalid Email - ${email}`);
   } else {
-    // if found: User Found!
-    console.log(`Generating PDF for user with email - ${email}...`);
-    PDFFillForm.write("./testpdfs/test.pdf", user, {
-      save: "pdf",
-      cores: 4,
-      scale: 0.2,
-      antialias: true
-    }).then(result => {
-      fs.writeFile(`./testpdfs/gen_${email}.pdf`, result, () => {
-        console.log(`PDF file saved - gen_${email}.pdf`);
+    // search for user
+    console.log(`Searching for user with email - ${email}`);
+    const user = findUserByEmail(email);
+
+    if (!user) {
+      console.log(`User with email - ${email} not found!`);
+    } else {
+      // if found: User Found!
+      console.log(`Generating PDF for user with email - ${email}...`);
+      PDFFillForm.write("./testpdfs/test.pdf", user, {
+        save: "pdf",
+        cores: 4,
+        scale: 0.2,
+        antialias: true
+      }).then(result => {
+        fs.writeFile(`./testpdfs/gen_${email}.pdf`, result, () => {
+          console.log(`PDF file saved - gen_${email}.pdf`);
+        });
       });
-    });
+    }
   }
 });
