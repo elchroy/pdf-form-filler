@@ -5,26 +5,23 @@ const pdfFiller = require("pdffiller");
 const cliSelect = require("cli-select");
 const users = require("../data/index");
 const userEmails = Object.keys(users);
-const chalk = require("chalk");
 const boxen = require("boxen");
 const { log, error, info } = console;
 readline.emitKeypressEvents(process.stdin);
+const {
+  welcomeMsg,
+  noMatchMsg,
+  errorMsg,
+  infoMsg,
+  readEmailMsg,
+  selectedUserMsg,
+  pdfGenerated
+} = require("../src/helpers");
 
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout
 });
-
-const welcomeMsg = chalk.white.underline(
-  "Welcome to the Canadian Immigration PDF Form Filler for VanHack!"
-);
-
-const getEmail = chalk.white.italic("Enter email address (to search): ");
-const noMatchMsg = chalk.red.italic("There's no user with given email");
-const selectedUserMsg = email =>
-  chalk.yellow.italic(`Selected user with email - ${email}`);
-const infoMsg = msg => chalk.yellow.italic(msg);
-const successMsg = msg => chalk.inverse.green.bold.italic(msg);
 
 const msg = boxen(welcomeMsg, {
   padding: 1,
@@ -34,7 +31,7 @@ const msg = boxen(welcomeMsg, {
 
 log(msg);
 
-rl.question(getEmail, email => {
+rl.question(readEmailMsg, email => {
   email = email.trim();
   if (["q", "quit"].includes(email)) {
     log("Bye!");
@@ -47,11 +44,11 @@ rl.question(getEmail, email => {
 
   filteredEmailsObj = {};
   filteredEmails.forEach(e => {
-    filteredEmailsObj[e] = chalk.yellow.italic(e);
+    filteredEmailsObj[e] = infoMsg(e);
   });
 
   if (filteredEmails.length === 0) {
-    error(noMatchMsg);
+    error(noMatchMsg(email));
     return rl.close();
   } else {
     cliSelect(
@@ -60,10 +57,9 @@ rl.question(getEmail, email => {
       },
       ({ id, value }) => {
         info(selectedUserMsg(value));
-        info(infoMsg(`Generating PDF for user with email - ${email}`));
+        info(infoMsg(`Generating PDF for user with email - ${value}`));
         if (id === null && value === null) {
-          // none was selected
-          log("none was selected");
+          log(errorMsg("No user was selected. Restart and select a user!"));
         } else {
           const user = users[id];
           const sourcePDF = "./testpdfs/immigration_unlokced.pdf";
@@ -71,11 +67,7 @@ rl.question(getEmail, email => {
 
           pdfFiller.fillForm(sourcePDF, destinationPDF, user, function(err) {
             if (err) throw err;
-            info(
-              successMsg(
-                `PDF generated successfully - vh-immigration-${id}-cnd.pdf`
-              )
-            );
+            info(pdfGenerated(id));
           });
         }
       }
