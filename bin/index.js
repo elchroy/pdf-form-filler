@@ -2,7 +2,7 @@
 
 const readline = require("readline");
 const pdfFiller = require("pdffiller");
-const cliSelect = require("cli-select");
+const inquirer = require("inquirer");
 const users = require("../data/index");
 const userEmails = Object.keys(users);
 const boxen = require("boxen");
@@ -42,35 +42,31 @@ rl.question(readEmailMsg, email => {
     userEmail.toLowerCase().includes(email.toLowerCase())
   );
 
-  filteredEmailsObj = {};
-  filteredEmails.forEach(e => {
-    filteredEmailsObj[e] = infoMsg(e);
-  });
-
   if (filteredEmails.length === 0) {
     error(noMatchMsg(email));
     return rl.close();
   } else {
-    cliSelect(
-      {
-        values: filteredEmailsObj
-      },
-      ({ id, value }) => {
-        info(selectedUserMsg(value));
-        info(infoMsg(`Generating PDF for user with email - ${value}`));
-        if (id === null && value === null) {
-          log(errorMsg("No user was selected. Restart and select a user!"));
-        } else {
-          const user = users[id];
-          const sourcePDF = "./testpdfs/immigration_unlokced.pdf";
-          const destinationPDF = `./testpdfs/vh-immigration-${id}-cnd.pdf`;
-
-          pdfFiller.fillForm(sourcePDF, destinationPDF, user, function(err) {
-            if (err) throw err;
-            info(pdfGenerated(id));
-          });
+    inquirer
+      .prompt([
+        {
+          type: "list",
+          name: "email",
+          message: infoMsg("Select user: "),
+          choices: filteredEmails
         }
-      }
-    );
+      ])
+      .then(({ email }) => {
+        info(selectedUserMsg(email));
+        info(infoMsg(`Generating PDF for user with email - ${email}`));
+
+        const user = users[email];
+        const sourcePDF = "./testpdfs/immigration_unlokced.pdf";
+        const destinationPDF = `./testpdfs/vh-immigration-${email}-cnd.pdf`;
+
+        pdfFiller.fillForm(sourcePDF, destinationPDF, user, function(err) {
+          if (err) throw err;
+          info(pdfGenerated(email));
+        });
+      });
   }
 });
