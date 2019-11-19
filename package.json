@@ -2,10 +2,7 @@
   "name": "pdf-form-filler",
   "version": "1.0.0",
   "description": "A PDF Form Filler for a Canadian Immigration",
-  "main": "./bin/index.js",
-  "bin": {
-    "cnd-immigration-pdf-filler": "./bin/index.js"
-  },
+  "main": "./index",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

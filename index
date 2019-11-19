@@ -3,7 +3,7 @@
 const readline = require("readline");
 const pdfFiller = require("pdffiller");
 const inquirer = require("inquirer");
-const users = require("../data/index");
+const users = require("./src/data");
 const userEmails = Object.keys(users);
 const { log, error, info } = console;
 const {
@@ -12,8 +12,10 @@ const {
   infoMsg,
   readEmailMsg,
   selectedUserMsg,
+  desFilePath,
+  sourceFilePath,
   pdfGenerated
-} = require("../src/helpers");
+} = require("./src/helpers");
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -42,7 +44,7 @@ rl.question(readEmailMsg, email => {
         {
           type: "list",
           name: "email",
-          message: infoMsg("Select user: "),
+          message: infoMsg("Select user (by email): "),
           choices: filteredEmails
         }
       ])
@@ -50,14 +52,15 @@ rl.question(readEmailMsg, email => {
         info(selectedUserMsg(email));
         info(infoMsg(`Generating PDF for user with email - ${email}`));
 
-        const user = users[email];
-        const sourcePDF = "./testpdfs/immigration_unlokced.pdf";
-        const destinationPDF = `./testpdfs/vh-immigration-${email}-cnd.pdf`;
-
-        pdfFiller.fillForm(sourcePDF, destinationPDF, user, function(err) {
-          if (err) throw err;
-          info(pdfGenerated(email));
-        });
+        pdfFiller.fillForm(
+          sourceFilePath,
+          desFilePath(email),
+          users[email],
+          function(err) {
+            if (err) throw err;
+            info(pdfGenerated(email));
+          }
+        );
       });
   }
 });

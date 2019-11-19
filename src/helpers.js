@@ -15,6 +15,10 @@ const welcomeMsg = boxen(
   }
 );
 
+const sourceFilePath = "./src/pdfs/immigration_source.pdf";
+const desFilePath = email =>
+  `./src/pdfs/generated/vh-immigration-${email}-cnd.pdf`;
+
 const readEmailMsg = enterInputMsg("Enter email address (to search): ");
 
 const noMatchMsg = email => errorMsg(`There's no user with like - ${email}`);
@@ -31,5 +35,7 @@ module.exports = {
   noMatchMsg,
   pdfGenerated,
   readEmailMsg,
-  welcomeMsg
+  welcomeMsg,
+  sourceFilePath,
+  desFilePath
 };
