@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 
 const readline = require("readline");
-const fs = require("fs");
-const PDFFillForm = require("pdf-fill-form");
+const pdfFiller = require("pdffiller");
 const cliSelect = require("cli-select");
 const users = require("../data/index");
 const userEmails = Object.keys(users);
@@ -34,15 +33,12 @@ rl.question("Enter email address (to search) ", email => {
         // none was selected
       } else {
         const user = users[value];
-        PDFFillForm.write("./testpdfs/test.pdf", user, {
-          save: "pdf",
-          cores: 4,
-          scale: 0.2,
-          antialias: true
-        }).then(result => {
-          fs.writeFile(`./testpdfs/gen-${value}.pdf`, result, () => {
-            console.log(`PDF file saved - gen-${value}.pdf`);
-          });
+        const sourcePDF = "./testpdfs/immigration_unlokced.pdf";
+        const destinationPDF = `./testpdfs/vh-immigration-${value}-cnd.pdf`;
+
+        pdfFiller.fillForm(sourcePDF, destinationPDF, user, function(err) {
+          if (err) throw err;
+          console.log("In callback (we're done).");
         });
       }
     }
