@@ -1,18 +1,23 @@
 const chalk = require("chalk");
+const boxen = require("boxen");
 
 const infoMsg = msg => chalk.yellow.italic(msg);
 const errorMsg = msg => chalk.red.italic(msg);
 const enterInputMsg = msg => chalk.blueBright.italic(msg);
 const successMsg = msg => chalk.inverse.green.bold.italic(msg);
 
-const welcomeMsg = chalk.white.underline(
-  "Welcome to the Canadian Immigration PDF Form Filler for VanHack!"
+const welcomeMsg = boxen(
+  chalk.white.underline("Canadian Immigration PDF Form Filler for VanHack!"),
+  {
+    padding: 1,
+    margin: 0,
+    backgroundColor: "#545454"
+  }
 );
 
 const readEmailMsg = enterInputMsg("Enter email address (to search): ");
 
-const noMatchMsg = email =>
-  errorMsg(`There's no user with given email - ${email}`);
+const noMatchMsg = email => errorMsg(`There's no user with like - ${email}`);
 
 const selectedUserMsg = email => infoMsg(`Selected user with email - ${email}`);
 

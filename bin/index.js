@@ -5,13 +5,10 @@ const pdfFiller = require("pdffiller");
 const inquirer = require("inquirer");
 const users = require("../data/index");
 const userEmails = Object.keys(users);
-const boxen = require("boxen");
 const { log, error, info } = console;
-readline.emitKeypressEvents(process.stdin);
 const {
   welcomeMsg,
   noMatchMsg,
-  errorMsg,
   infoMsg,
   readEmailMsg,
   selectedUserMsg,
@@ -23,13 +20,7 @@ const rl = readline.createInterface({
   output: process.stdout
 });
 
-const msg = boxen(welcomeMsg, {
-  padding: 1,
-  margin: 0,
-  backgroundColor: "#545454"
-});
-
-log(msg);
+log(welcomeMsg);
 
 rl.question(readEmailMsg, email => {
   email = email.trim();
