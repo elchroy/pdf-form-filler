@@ -26,7 +26,9 @@ const noMatchMsg = email => errorMsg(`There's no user with like - ${email}`);
 const selectedUserMsg = email => infoMsg(`Selected user with email - ${email}`);
 
 const pdfGenerated = email =>
-  successMsg(`PDF generated successfully - vh-immigration-${email}-cnd.pdf`);
+  successMsg(
+    `PDF generated successfully -> ./src/pdfs/generated/vh-immigration-${email}-cnd.pdf`
+  );
 
 module.exports = {
   infoMsg,

@@ -1,2 +1,3 @@
 /node_modules
 /src/pdfs/generated/**/*
+!/src/pdfs/generated/.gitkeep
