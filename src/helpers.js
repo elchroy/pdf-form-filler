@@ -19,7 +19,9 @@ const sourceFilePath = "./src/pdfs/immigration_source.pdf";
 const desFilePath = email =>
   `./src/pdfs/generated/vh-immigration-${email}-cnd.pdf`;
 
-const readEmailMsg = enterInputMsg("Enter email address (to search): ");
+const readEmailMsg =
+  enterInputMsg("Enter email address (to search), ") +
+  infoMsg("`q` or `quit` to quit: ");
 
 const noMatchMsg = email => errorMsg(`There's no user with like - ${email}`);
 
@@ -30,12 +32,15 @@ const pdfGenerated = email =>
     `PDF generated successfully -> ./src/pdfs/generated/vh-immigration-${email}-cnd.pdf`
   );
 
+const quitMsg = infoMsg("Bye! You can always restart by running `./index`.");
+
 module.exports = {
   infoMsg,
   errorMsg,
   selectedUserMsg,
   noMatchMsg,
   pdfGenerated,
+  quitMsg,
   readEmailMsg,
   welcomeMsg,
   sourceFilePath,

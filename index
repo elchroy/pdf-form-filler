@@ -14,6 +14,7 @@ const {
   selectedUserMsg,
   desFilePath,
   sourceFilePath,
+  quitMsg,
   pdfGenerated
 } = require("./src/helpers");
 
@@ -24,43 +25,48 @@ const rl = readline.createInterface({
 
 log(welcomeMsg);
 
-rl.question(readEmailMsg, email => {
-  email = email.trim();
-  if (["q", "quit"].includes(email)) {
-    log("Bye!");
-    return rl.close();
-  }
+const recursiveRL = () => {
+  rl.question(readEmailMsg, email => {
+    email = email.trim().toLowerCase();
+    if (["q", "quit"].includes(email)) {
+      log(quitMsg);
+      return rl.close();
+    } else {
+      const filteredEmails = userEmails.filter(userEmail =>
+        userEmail.toLowerCase().includes(email.toLowerCase())
+      );
+      const len = filteredEmails.length;
+      if (len === 0) {
+        error(noMatchMsg(email));
+        recursiveRL();
+      } else {
+        info(infoMsg(`${len} user(s) found!`));
+        inquirer
+          .prompt([
+            {
+              type: "list",
+              name: "email",
+              message: infoMsg("Select user (by email): "),
+              choices: filteredEmails
+            }
+          ])
+          .then(({ email }) => {
+            info(selectedUserMsg(email));
+            info(infoMsg(`Generating PDF for user with email - ${email}`));
 
-  const filteredEmails = userEmails.filter(userEmail =>
-    userEmail.toLowerCase().includes(email.toLowerCase())
-  );
+            pdfFiller.fillForm(
+              sourceFilePath,
+              desFilePath(email),
+              users[email],
+              function(err) {
+                if (err) throw err;
+                info(pdfGenerated(email));
+              }
+            );
+          });
+      }
+    }
+  });
+};
 
-  if (filteredEmails.length === 0) {
-    error(noMatchMsg(email));
-    return rl.close();
-  } else {
-    inquirer
-      .prompt([
-        {
-          type: "list",
-          name: "email",
-          message: infoMsg("Select user (by email): "),
-          choices: filteredEmails
-        }
-      ])
-      .then(({ email }) => {
-        info(selectedUserMsg(email));
-        info(infoMsg(`Generating PDF for user with email - ${email}`));
-
-        pdfFiller.fillForm(
-          sourceFilePath,
-          desFilePath(email),
-          users[email],
-          function(err) {
-            if (err) throw err;
-            info(pdfGenerated(email));
-          }
-        );
-      });
-  }
-});
+recursiveRL();
